@@ -18,8 +18,8 @@ class WordsController extends require('./Controller') {
     queryStringParamsList(){
         let content = "<div style=font-family:arial>";
         content += "<h4>List of parameters in query strings:</h4>";
-        content += "<h4>? sort=key <br> return all bookmarks sorted by key values (Id, Name, Category, Url)";
-        content += "<h4>? sort=key,desc <br> return all bookmarks sorted by descending key values";        
+        content += "<h4>? sort=key <br> return all words sorted by key values (word)";
+        content += "<h4>? sort=key,desc <br> return all words sorted by descending key values";        
         content += "<h4>? key=value <br> return the bookmark with key value = value";
         content += "<h4>? key=value* <br> return the bookmark with key value that start with value";
         content += "<h4>? key=*value* <br> return the bookmark with key value that contains value";        
@@ -36,14 +36,12 @@ class WordsController extends require('./Controller') {
     head() {
         this.response.JSON(null, this.wordsRepository.ETag);
     }
-    // GET: api/bookmarks
-    // GET: api/bookmarks?sort=key&key=value....
-    // GET: api/bookmarks/{id}
+    // GET: api/words
+    // GET: api/words?sort=key&key=value....
+    // GET: api/words/{id}
     get(id){
-       
         let decomposedPath = decomposePath(this.req.url);
         let params = decomposedPath["params"];
-        
         // if we have no parameter, expose the list of possible query strings
         if (params === null) {
             if(!isNaN(id)) {
@@ -53,6 +51,7 @@ class WordsController extends require('./Controller') {
                 this.response.JSON(this.wordsRepository.getAll(), this.wordsRepository.ETag);
         }
         else {
+            
             let limit = decomposedPath["limit"];
             let offset = decomposedPath["offset"];
             
@@ -68,18 +67,18 @@ class WordsController extends require('./Controller') {
             }
         }
     }
-    // POST: api/bookmarks body payload[{"Id": ..., "Name": "...", "Url": "...", "Category": "...", "UserId": ...}]
-    post(bookmark){  
+    // POST: api/words body payload[{"Id": ..., "Word": "...", "Definition": "..."}]
+    post(word){  
         if (this.requestActionAuthorized()) {
-            // validate bookmark before insertion
-            if (Bookmark.valid(bookmark)) {
+            // validate word before insertion
+            if (Word.valid(bookwordmark)) {
                 // avoid duplicate names
-                if (this.wordsRepository.findByField('Name', bookmark.Name) !== null){
+                if (this.wordsRepository.findByField('Word', word.Word) !== null){
                     this.response.conflict();
                 } else {
-                    let newBookmark = this.wordsRepository.add(bookmark);
-                    if (newBookmark)
-                        this.response.created(newBookmark);
+                    let newWord = this.wordsRepository.add(word);
+                    if (newWord)
+                        this.response.created(newWord);
                     else
                         this.response.internalError();
                 }
@@ -88,19 +87,19 @@ class WordsController extends require('./Controller') {
         } else 
             this.response.unAuthorized();
     }
-    // PUT: api/bookmarks body payload[{"Id":..., "Name": "...", "Url": "...", "Category": "...", "UserId": ..}]
-    put(bookmark){
+    // PUT: api/words body payload[{"Id":..., "Word": "...", "Definition": "..."}]
+    put(word){
         if (this.requestActionAuthorized()) {
             // validate bookmark before updating
-            if (Bookmark.valid(bookmark)) {
-                let foundBookmark = this.wordsRepository.findByField('Name', bookmark.Name);
-                if (foundBookmark != null){
-                    if (foundBookmark.Id != bookmark.Id) {
+            if (Word.valid(word)) {
+                let foundWord = this.wordsRepository.findByField('Word', word.Word);
+                if (foundWord != null){
+                    if (foundWord.Id != word.Id) {
                         this.response.conflict();
                         return;
                     }
                 }
-                if (this.wordsRepository.update(bookmark))
+                if (this.wordsRepository.update(word))
                     this.response.ok();
                 else 
                     this.response.notFound();
@@ -109,7 +108,7 @@ class WordsController extends require('./Controller') {
         } else 
         this.response.unAuthorized();
     }
-    // DELETE: api/bookmarks/{id}
+    // DELETE: api/words/{id}
     remove(id){
         if (this.requestActionAuthorized()) {
             if (this.wordsRepository.remove(id))

@@ -65,10 +65,8 @@ class BookmarksController extends require('./Controller') {
     // GET: api/bookmarks?sort=key&key=value....
     // GET: api/bookmarks/{id}
     get(id){
-       
         let decomposedPath = decomposePath(this.req.url);
         let params = decomposedPath["params"];
-        
         // if we have no parameter, expose the list of possible query strings
         if (params === null) {
             if(!isNaN(id)) {
@@ -78,6 +76,7 @@ class BookmarksController extends require('./Controller') {
                 this.response.JSON(this.resolveUserNames(this.bookmarksRepository.getAll()), this.bookmarksRepository.ETag);
         }
         else {
+           
             let limit = decomposedPath["limit"];
             let offset = decomposedPath["offset"];
             
