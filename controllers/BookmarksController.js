@@ -24,6 +24,7 @@ class BookmarksController extends require('./Controller') {
         content += "<h4>? key=value* <br> return the bookmark with key value that start with value";
         content += "<h4>? key=*value* <br> return the bookmark with key value that contains value";        
         content += "<h4>? key=*value <br> return the bookmark with key value end with value";
+        content += "<h4>page?limit=int&offset=int <br> return limit bookmarks of page offset";
         content += "</div>";
         return content;
     }
