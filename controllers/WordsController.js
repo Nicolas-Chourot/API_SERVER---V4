@@ -7,7 +7,7 @@ module.exports =
 class WordsController extends require('./Controller') {
     constructor(req, res){
         super(req, res, false /* needAuthorization */);
-        this.wordsRepository = new Repository('Words', true /* useETag */);
+        this.wordsRepository = new Repository('Words', true /* cached */);
         this.collectionFilter = new CollectionFilter();
     }
     error(params, message){
@@ -50,15 +50,12 @@ class WordsController extends require('./Controller') {
             else  
                 this.response.JSON(this.wordsRepository.getAll(), this.wordsRepository.ETag);
         }
-        else {
-            
-            let limit = decomposedPath["limit"];
-            let offset = decomposedPath["offset"];
-            
+        else {       
+          
             if (Object.keys(params).length === 0) {
                 this.queryStringHelp();
             } else {
-                this.collectionFilter.init(this.wordsRepository.getAll(), limit, offset);
+                this.collectionFilter.init(this.wordsRepository.getAll(), decomposedPath["limit"], decomposedPath["offset"]);
                 if ('word' in params)
                     this.collectionFilter.addSearchKey('word', params['word']);
                 if ('sort' in params)

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta author="Nicolas Chourot">
+        <meta http-equiv="Content-Type" content="text/html; charset= ISO-8859-1">
+        <title>Weird Dictionary</title>
+        <style>
+            .wordsContainer {
+                margin:auto;
+                max-width: 1600px;
+                width:100%;
+                display: grid;
+                grid-gap: 1em;
+                grid-template-columns: repeat(auto-fill, 200px);
+            }
+            .link {
+                cursor: pointer;
+            }
+        </style>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div id="words" class="wordsContainer">
+
+        </div>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            webAPI_GET();
+        })
+        let limit = 200;
+        let offset = 0;
+
+        function webAPI_GET() {
+            $('#words').empty();
+            $.ajax({
+                url: "http://localhost:5000/api/words/page?limit="+ limit + "&offset=" + offset + "&sort=word&word=H*",
+                type: 'GET',
+                contentType:'text/plain',
+                data:{},
+                success: words => {
+                    $('#words').append("<div class='link' id='previous'> <--- </div>");
+                    words.forEach(word => {
+                        $('#words').append("<div class='link' data-placement='bottom' title='" + word.Definition + "'>" + word.Word + "</div>");
+                    });
+                    $('#words').append("<div class='link' id='next'> ---> </div>");
+                    $('#previous').click(function(){
+                        if (offset > 0)
+                            offset --;
+                            webAPI_GET();
+                    });
+                    $('#next').click(function(){
+                            offset ++;
+                            webAPI_GET();
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("webAPI_GET_ALL - error" , jqXHR.status);
+                }
+            });
+        }
+    </script>
+</html>
