@@ -115,12 +115,12 @@
         }
 
         function webAPI_GET() {
-            let queryString = "?limit="+ limit + "&offset=" + offset + "&sort=word";
+            let queryString = "?limit="+ limit + "&offset=" + offset;
             if (currentLetter != "*")
                 queryString += "&word=" + currentLetter + "*";
             $('#words').empty();
             $.ajax({
-                url: "http://localhost:5000/api/words/page" + queryString,
+                url: "http://localhost:5000/api/words" + queryString,
                 type: 'GET',
                 contentType:'text/plain',
                 data:{},

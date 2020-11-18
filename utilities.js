@@ -42,7 +42,6 @@ exports.decomposePath = (url) => {
     let model = undefined;
     let action = undefined;
     let id = undefined;
-    let pagedResults = false;
     let limit = undefined;
     let offset = undefined;
     let params = null;
@@ -72,25 +71,9 @@ exports.decomposePath = (url) => {
             id = parseInt(urlParts[3]);
         }
     } else {
-        if (urlParts[2] == "page") {
-            pagedResults = true;
-            if (params != null) {
-                if ('limit' in params) {
-                    limit = parseInt(params['limit']);
-                    if (isNaN(limit))
-                        limit = undefined;
-                }
-                if ('offset' in params) {
-                    offset = parseInt(params['offset']);
-                    if (isNaN(offset))
-                        offset = undefined;
-                }
-            }
-        } else {
-            if (urlParts[2] != undefined) {
-                id = parseInt(urlParts[2]);
-            }
-        }
+        if (urlParts[2] != undefined) {
+            id = parseInt(urlParts[2]);
+        } 
     }
-    return { isAPI, model, action, id, pagedResults, limit, offset, queryString , params};
+    return { isAPI, model, action, id, queryString , params};
 }

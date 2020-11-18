@@ -2,26 +2,26 @@ const utilities = require('../utilities');
 
 module.exports = 
 class collectionFilter{
-    constructor() {
+    constructor(collection, filterParams) {
+        this.collection = collection;
         this.sortFields = [];
         this.searchKeys = [];
         this.filteredCollection = [];
-        this.limit = undefined;
-        this.offset = undefined;
+        this.limit = 0;
+        this.offset = 0;
+        let instance = this;
+        Object.keys(filterParams).forEach(function(paramName) {
+            let paramValue = filterParams[paramName];
+            console.log(paramName, paramValue);
+            switch (paramName) {
+                case "sort": instance.setSortFields(paramValue); break;
+                case "limit": instance.limit = paramValue;  break;
+                case "offset": instance.offset = paramValue; break;
+                default: instance.addSearchKey(paramName, paramValue);
+            }
+        });
     }
-    init(collection, limit = undefined, offset = undefined){
-        this.collection = collection;
-        this.clearSortFields();
-        this.clearSearchKeys();
-        this.limit = limit;
-        this.offset = offset;
-    }
-    clearSortFields() {
-        this.sortFields = [];
-    }
-    clearSearchKeys() {
-        this.searchKeys = [];
-    }
+
     makeSortField(fieldName) {
         let parts = fieldName.split(',');
         let sortField = "";
@@ -37,6 +37,7 @@ class collectionFilter{
                     ascending: ascending
                 };
     }
+
     setSortFields(fieldNames){
         if (Array.isArray(fieldNames)) {
             for(let fieldName of fieldNames) {
@@ -105,7 +106,7 @@ class collectionFilter{
         this.filteredCollection.sort((a, b) => this.compare(a, b));
     }
     getPage(collection){
-        if (this.limit != undefined && this.offset != undefined){
+        if (this.limit != 0){
             let page = [];
             let objectsListLength = collection.length;
             for(let i = this.offset * this.limit; i < (this.offset + 1) * this.limit; i++) {

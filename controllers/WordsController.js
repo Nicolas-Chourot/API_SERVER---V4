@@ -8,7 +8,6 @@ class WordsController extends require('./Controller') {
     constructor(req, res){
         super(req, res, false /* needAuthorization */);
         this.wordsRepository = new Repository('Words', true /* cached */);
-        this.collectionFilter = new CollectionFilter();
     }
     error(params, message){
         params["error"] = message;
@@ -41,8 +40,7 @@ class WordsController extends require('./Controller') {
     // GET: api/words?sort=key&key=value....
     // GET: api/words/{id}
     get(id){
-        let decomposedPath = decomposePath(this.req.url);
-        let params = decomposedPath["params"];
+        let params = this.getQueryStringParams(); 
         // if we have no parameter, expose the list of possible query strings
         if (params === null) {
             if(!isNaN(id)) {
@@ -52,16 +50,12 @@ class WordsController extends require('./Controller') {
                 this.response.JSON(this.wordsRepository.getAll(), this.wordsRepository.ETag);
         }
         else {       
-          
+            
             if (Object.keys(params).length === 0) {
                 this.queryStringHelp();
             } else {
-                this.collectionFilter.init(this.wordsRepository.getAll(), decomposedPath["limit"], decomposedPath["offset"]);
-                if ('word' in params)
-                    this.collectionFilter.addSearchKey('word', params['word']);
-                if ('sort' in params)
-                    this.collectionFilter.setSortFields(params['sort']);
-                    this.response.JSON(this.collectionFilter.get(), this.wordsRepository.ETag);
+                let collectionFilter = new CollectionFilter(this.wordsRepository.getAll(), params);
+                this.response.JSON(collectionFilter.get(), this.wordsRepository.ETag);
             }
         }
     }

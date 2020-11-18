@@ -70,9 +70,7 @@ function showRequestProcessTime() {
     let requestProcessEndTime = process.hrtime(requestProcessStartTime);
     console.log('Request process time: %ds %dms', requestProcessEndTime[0], requestProcessEndTime[1] / 1000000);
 }
-
 routeConfig();
-
 function migration() {
     let objectsList = null;
     const fs = require('fs');

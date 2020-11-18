@@ -8,7 +8,6 @@ class BookmarksController extends require('./Controller') {
     constructor(req, res){
         super(req, res, false /* needAuthorization */);
         this.bookmarksRepository = new Repository('Bookmarks', true /* cached */);
-        this.collectionFilter = new CollectionFilter();
     }
     error(params, message){
         params["error"] = message;
@@ -66,8 +65,7 @@ class BookmarksController extends require('./Controller') {
     // GET: api/bookmarks?sort=key&key=value....
     // GET: api/bookmarks/{id}
     get(id){
-        let decomposedPath = decomposePath(this.req.url);
-        let params = decomposedPath["params"];
+        let params = this.getQueryStringParams(); 
         // if we have no parameter, expose the list of possible query strings
         if (params === null) {
             if(!isNaN(id)) {
@@ -77,23 +75,11 @@ class BookmarksController extends require('./Controller') {
                 this.response.JSON(this.resolveUserNames(this.bookmarksRepository.getAll()), this.bookmarksRepository.ETag);
         }
         else {
-           
-            let limit = decomposedPath["limit"];
-            let offset = decomposedPath["offset"];
-            
             if (Object.keys(params).length === 0) {
                 this.queryStringHelp();
             } else {
-                this.collectionFilter.init(this.resolveUserNames(this.bookmarksRepository.getAll()), limit, offset);
-                if ('name' in params)
-                    this.collectionFilter.addSearchKey('name', params['name']);
-                if ('category' in params)
-                    this.collectionFilter.addSearchKey('category', params['category']);
-                if ('username' in params)
-                    this.collectionFilter.addSearchKey('username', params['username']);
-                if ('sort' in params)
-                    this.collectionFilter.setSortFields(params['sort']);
-                    this.response.JSON(this.collectionFilter.get(), this.bookmarksRepository.ETag);
+                let collectionFilter= new CollectionFilter(this.resolveUserNames(this.bookmarksRepository.getAll()), params);
+                this.response.JSON(collectionFilter.get(), this.bookmarksRepository.ETag);
             }
         }
     }
