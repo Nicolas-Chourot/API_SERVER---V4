@@ -55,5 +55,6 @@ class RepositoryCachesManager {
     }
 }
 // periodic cleaning of expired cached repository data
+console.log("Periodic respository caches cleaning process started...");
 setInterval(RepositoryCachesManager.flushExpired, repositoryCachesExpirationTime * 1000);
 module.exports = RepositoryCachesManager;

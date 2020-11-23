@@ -56,5 +56,6 @@ class GetRequestsCacheManager {
 }
 
 // periodic cleaning of expired cached GET request
+console.log("Periodic GET requests cache cleaning process started...");
 setInterval(GetRequestsCacheManager.flushExpired, getRequestsCacheExpirationTime * 1000);
 module.exports = GetRequestsCacheManager;

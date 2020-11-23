@@ -96,6 +96,10 @@ function migration() {
         }
     }
 }
+function Static_Ressource_Request(req,res) {
+    const staticRessourcesServer = require('./staticRessourcesServer.js');
+    return staticRessourcesServer.sendRequestedFile(req, res);
+}
 
 
 require('http').createServer((req, res) => {
@@ -104,13 +108,14 @@ require('http').createServer((req, res) => {
     setRequestProcessStartTime();
     AccessControlConfig(res);
     // Middlewares pipeline
-    if (!CORS_Prefligth(req, res))
-        if (!cached_GetRequest(req, res))
-            if (!token_Endpoint(req, res))
-                if (!registered_Enpoint(req, res))
-                    if (!API_Endpoint(req, res))
-                        // do something else with request
-                        responseNotFound(res);
+    if (!Static_Ressource_Request(req, res))
+        if (!CORS_Prefligth(req, res))
+            if (!cached_GetRequest(req, res))
+                if (!token_Endpoint(req, res))
+                    if (!registered_Enpoint(req, res))
+                        if (!API_Endpoint(req, res))
+                            // do something else with request
+                            responseNotFound(res);
     showRequestProcessTime();
     console.log('-------------------------------------------------------->');
 }).listen(PORT, () => console.log(`HTTP Server running on port ${PORT}...`));

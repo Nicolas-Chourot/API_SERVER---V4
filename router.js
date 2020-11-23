@@ -133,6 +133,9 @@ exports.dispatch_API_EndPoint = function(req, res){
     }
     
     let path = utilities.decomposePath(req.url);
+
+    if (!path.isAPI)
+        return false;
     let controllerName = makeControllerName(path.model);
     let id = path.id;
 
