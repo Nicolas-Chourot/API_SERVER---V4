@@ -1,5 +1,5 @@
 const utilities = require('./utilities');
-const Cache = require('./cache');
+const Cache = require('./getRequestsCacheManager');
 module.exports = 
 class Response {
     constructor (res, url = "") {

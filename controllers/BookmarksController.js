@@ -72,13 +72,16 @@ class BookmarksController extends require('./Controller') {
                 this.response.JSON(this.resolveUserName(this.bookmarksRepository.get(id)));
             }
             else  
-                this.response.JSON(this.resolveUserNames(this.bookmarksRepository.getAll()), this.bookmarksRepository.ETag);
+                this.response.JSON( this.resolveUserNames(this.bookmarksRepository.getAll()), 
+                                    this.bookmarksRepository.ETag);
         }
         else {
             if (Object.keys(params).length === 0) {
                 this.queryStringHelp();
             } else {
-                let collectionFilter= new CollectionFilter(this.resolveUserNames(this.bookmarksRepository.getAll()), params);
+                let collectionFilter= new CollectionFilter( 
+                    this.resolveUserNames(this.bookmarksRepository.getAll()), 
+                    params);
                 this.response.JSON(collectionFilter.get(), this.bookmarksRepository.ETag);
             }
         }

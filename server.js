@@ -44,9 +44,9 @@ function routeConfig() {
 function registered_Enpoint(req, res) {
     return require('./router').dispatch_Registered_EndPoint(req, res);
 }
-function cached_Endpoint(req, res){
+function cached_GetRequest(req, res){
     if (req.method == 'GET') {
-        const Cache = require('./cache');
+        const Cache = require('./getRequestsCacheManager.js');
         let content = Cache.find(req.url);
         if (content != null) {
             res.writeHead(200, {'content-type':'application/json'});
@@ -105,7 +105,7 @@ require('http').createServer((req, res) => {
     AccessControlConfig(res);
     // Middlewares pipeline
     if (!CORS_Prefligth(req, res))
-        if (!cached_Endpoint(req, res))
+        if (!cached_GetRequest(req, res))
             if (!token_Endpoint(req, res))
                 if (!registered_Enpoint(req, res))
                     if (!API_Endpoint(req, res))

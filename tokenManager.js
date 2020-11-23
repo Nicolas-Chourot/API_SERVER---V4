@@ -31,6 +31,7 @@ class TokenManager{
         return token;
     }
     static cleanTokens() {
+        console.log("cleaning tokens");
         let tokens = repository.getAll();
         let now = utilities.nowInSeconds();
         let index = 0;
@@ -65,5 +66,5 @@ class TokenManager{
 }
 
 // periodic cleaning of expired tokens
-setInterval(TokenManager.cleanTokens, tokenLifeDuration);
+setInterval(TokenManager.cleanTokens, tokenLifeDuration * 1000);
 module.exports = TokenManager;

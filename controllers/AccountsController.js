@@ -2,7 +2,7 @@ const Repository = require('../models/Repository');
 const TokenManager = require('../tokenManager');
 const utilities = require("../utilities");
 const User = require('../models/user');
-const Cache = require('../cache');
+const Cache = require('../getRequestsCacheManager');
 
 module.exports = 
 class AccountsController extends require('./Controller') {

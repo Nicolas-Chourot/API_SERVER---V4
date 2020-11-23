@@ -1,4 +1,6 @@
 const utilities = require("../utilities");
+const RepositoryCachesManager = require("./repositoryCachesManager.js");
+
 const { v1: uuidv1 } = require('uuid');
 const fs = require('fs');
 ///////////////////////////////////////////////////////////////////////////
@@ -8,10 +10,10 @@ const fs = require('fs');
 // Warning: no type and data validation is provided
 ///////////////////////////////////////////////////////////////////////////
 
-let repositoryCaches = {};
+
 let repositoryEtags = {};
 
-module.exports = 
+
 class Repository {
     constructor(objectsName, cached = true) {
         this.objectsName = objectsName.toLowerCase();
@@ -21,7 +23,6 @@ class Repository {
         this.cached = cached;
         this.read();
     }
-
     initEtag() {
         this.ETag = "";
         if (this.objectsName in repositoryEtags)
@@ -29,18 +30,14 @@ class Repository {
         else
             this.newETag();
     }
-
     newETag(){
         this.ETag = uuidv1();
         repositoryEtags[this.objectsName] = this.ETag;
     }
-
     read() {
         this.objectsList = null;
         if (this.cached) {
-            if (this.objectsName in repositoryCaches) {
-                this.objectsList = repositoryCaches[this.objectsName];
-            }
+            this.objectsList = RepositoryCachesManager.find(this.objectsName);
         }
         if ( this.objectsList == null) {
             try{
@@ -50,7 +47,7 @@ class Repository {
                 // we assume here that the json data is formatted correctly
                 this.objectsList = JSON.parse(rawdata);
                 if (this.cached)
-                    repositoryCaches[this.objectsName] = this.objectsList;
+                    RepositoryCachesManager.add(this.objectsName, this.objectsList);
             } catch(error) {
                 if (error.code === 'ENOENT') {
                     // file does not exist, it will be created on demand
@@ -65,8 +62,7 @@ class Repository {
         this.newETag();
         fs.writeFileSync(this.objectsFile, JSON.stringify(this.objectsList));
         if (this.cached){
-            if (this.objectsName in repositoryCaches)
-                delete repositoryCaches[this.objectsName];
+            RepositoryCachesManager.clear(this.objectsName);
         }
         this.read();
     }
@@ -143,3 +139,4 @@ class Repository {
         return null;
     }
 }
+module.exports = Repository;

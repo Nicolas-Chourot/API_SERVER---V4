@@ -12,7 +12,6 @@ class collectionFilter{
         let instance = this;
         Object.keys(filterParams).forEach(function(paramName) {
             let paramValue = filterParams[paramName];
-            console.log(paramName, paramValue);
             switch (paramName) {
                 case "sort": instance.setSortFields(paramValue); break;
                 case "limit": instance.limit = paramValue;  break;
