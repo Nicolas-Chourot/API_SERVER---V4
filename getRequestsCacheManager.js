@@ -37,7 +37,8 @@ class GetRequestsCacheManager {
                 if (endpoint.url.indexOf(url) > -1) indexToDelete.push(index);
                 index ++;
             }
-            utilities.deleteByIndex(getRequestsCache, indexToDelete);
+            if (index > 0)
+                utilities.deleteByIndex(getRequestsCache, indexToDelete);
         }
     }
     static flushExpired() {

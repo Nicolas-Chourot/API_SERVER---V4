@@ -12,8 +12,10 @@
   "dependencies": {
     "-": "0.0.1",
     "g": "^2.0.1",
+    "image-size": "^0.9.3",
     "properties-reader": "^2.1.1",
     "query-string": "^6.13.2",
+    "resize-img": "^2.0.0",
     "uuid": "^8.3.1"
   }
 }

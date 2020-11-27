@@ -10,18 +10,15 @@ const fs = require('fs');
 // Warning: no type and data validation is provided
 ///////////////////////////////////////////////////////////////////////////
 
-
 let repositoryEtags = {};
-
 
 class Repository {
     constructor(objectsName, cached = true) {
         this.objectsName = objectsName.toLowerCase();
-        this.objectsList = [];
+        this.objectsList = null;
         this.objectsFile = `./data/${objectsName}.json`;
         this.initEtag();
         this.cached = cached;
-        this.read();
     }
     initEtag() {
         this.ETag = "";
@@ -33,6 +30,11 @@ class Repository {
     newETag(){
         this.ETag = uuidv1();
         repositoryEtags[this.objectsName] = this.ETag;
+    }
+    objects() {
+        if (this.objectsList == null) 
+            this.read();
+        return this.objectsList;
     }
     read() {
         this.objectsList = null;
@@ -60,15 +62,14 @@ class Repository {
         // Here we use the synchronus version writeFile in order
         // to avoid concurrency problems  
         this.newETag();
-        fs.writeFileSync(this.objectsFile, JSON.stringify(this.objectsList));
+        fs.writeFileSync(this.objectsFile, JSON.stringify(this.objects()));
         if (this.cached){
             RepositoryCachesManager.clear(this.objectsName);
         }
-        this.read();
     }
     nextId() {
         let maxId = 0;
-        for(let object of this.objectsList){
+        for(let object of this.objects()){
             if (object.Id > maxId) {
                 maxId = object.Id;
             }
@@ -78,7 +79,7 @@ class Repository {
     add(object) {
         try {
             object.Id = this.nextId();
-            this.objectsList.push(object);
+            this.objects().push(object);
             this.write();
             return object;
         } catch(error) {
@@ -86,10 +87,10 @@ class Repository {
         }
     }
     getAll() {
-        return this.objectsList;
+        return this.objects();
     }
     get(id){
-        for(let object of this.objectsList){
+        for(let object of this.objects()){
             if (object.Id === id) {
                return object;
             }
@@ -98,9 +99,9 @@ class Repository {
     }
     remove(id) {
         let index = 0;
-        for(let object of this.objectsList){
+        for(let object of this.objects()){
             if (object.Id === id) {
-                this.objectsList.splice(index,1);
+                this.objects().splice(index,1);
                 this.write();
                 return true;
             }
@@ -109,14 +110,16 @@ class Repository {
         return false;
     }
     removeByIndex(indexToDelete){
-        utilities.deleteByIndex(this.objectsList, indexToDelete);
-        this.write();
+        if (indexToDelete.length > 0){
+            utilities.deleteByIndex(this.objects(), indexToDelete);
+            this.write();
+        }
     }
     update(objectToModify) {
         let index = 0;
-        for(let object of this.objectsList){
+        for(let object of this.objects()){
             if (object.Id === objectToModify.Id) {
-                this.objectsList[index] = objectToModify;
+                this.objects()[index] = objectToModify;
                 this.write();
                 return true;
             }
@@ -126,10 +129,10 @@ class Repository {
     } 
     findByField(fieldName, value){
         let index = 0;
-        for(let object of this.objectsList){
+        for(let object of this.objects()){
             try {
                 if (object[fieldName] === value) {
-                    return this.objectsList[index];
+                    return this.objects()[index];
                 }
                 index ++;
             } catch(error) {

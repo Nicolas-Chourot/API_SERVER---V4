@@ -15,7 +15,7 @@ class RepositoryCachesManager {
             let indexToDelete = [];
             let index = 0;
             for(let cache of repositoryCaches){
-                if (cache.model = model) indexToDelete.push(index);
+                if (cache.model == model) indexToDelete.push(index);
                 index ++;
             }
             utilities.deleteByIndex(repositoryCaches, indexToDelete);
@@ -51,7 +51,8 @@ class RepositoryCachesManager {
             }
             index ++;
         }
-        utilities.deleteByIndex(repositoryCaches, indexToDelete);
+        if (index > 1)
+            utilities.deleteByIndex(repositoryCaches, indexToDelete);
     }
 }
 // periodic cleaning of expired cached repository data

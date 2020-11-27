@@ -37,15 +37,22 @@ class AccountsController extends require('./Controller') {
         let user =  this.usersRepository.findByField("Email", loginInfo.Email);
         if (user != null){
             if (user.Password == loginInfo.Password) {
-                let newToken = TokenManager.create(user.Email);
-                console.log(newToken)
-                newToken["UserId"] = user.Id;
-                newToken["Username"] = user.Name;
+                let newToken = TokenManager.create(user);
+                console.log(newToken);
                 this.response.JSON(newToken);
             } else 
                 this.response.badRequest();
         } else
             this.response.badRequest();
+    }
+
+    logout(user) {
+        if (this.requestActionAuthorized()) {
+            TokenManager.logout(user.Id);
+            this.response.accepted();
+        }
+        else
+            this.response.unAuthorized();
     }
     
     // POST: account/register body payload[{"Id": 0, "Name": "...", "Email": "...", "Password": "..."}]

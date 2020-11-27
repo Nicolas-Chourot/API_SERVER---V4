@@ -38,6 +38,7 @@ function routeConfig() {
     const RouteRegister = require('./routeRegister');
     RouteRegister.add('GET','accounts');
     RouteRegister.add('POST','accounts','register');
+    RouteRegister.add('POST','accounts','logout');
     RouteRegister.add('PUT','accounts','change');
     RouteRegister.add('DELETE','accounts','remove');
 }
@@ -100,7 +101,6 @@ function Static_Ressource_Request(req,res) {
     const staticRessourcesServer = require('./staticRessourcesServer.js');
     return staticRessourcesServer.sendRequestedFile(req, res);
 }
-
 
 require('http').createServer((req, res) => {
     console.log('<--------------------------------------------------------');
