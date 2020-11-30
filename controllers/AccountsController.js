@@ -112,10 +112,23 @@ class AccountsController extends require('./Controller') {
         bookmarksRepository.removeByIndex(indexToDelete);
         Cache.clear('bookmarks');
     }
-    // todo
+    deleteAllUsersImages(userId){
+        let imagesRepository = new Repository('Images', true);
+        let images = imagesRepository.getAll();
+        let indexToDelete = [];
+        let index = 0;
+        for(let image of images) {
+            if (image.UserId == userId)
+                indexToDelete.push(index);
+            index ++;
+        }
+        imagesRepository.removeByIndex(indexToDelete);
+        Cache.clear('images');
+    }
     remove(id) {
         if (this.requestActionAuthorized()) {
             this.deleteAllUsersBookmarks(id);
+            this.deleteAllUsersImages(id);
             if (this.usersRepository.remove(id))
                 this.response.accepted();
             else
