@@ -3,7 +3,7 @@ module.exports =
 class ImageFilesRepository{
     
     static getServerImageFilesFolder() {
-        return "./public/images/";
+        return "./wwwroot/images/";
     }
     static getImageFilesFolder() {
         return "/images/";

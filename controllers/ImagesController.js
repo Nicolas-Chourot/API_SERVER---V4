@@ -34,7 +34,6 @@ class ImagesController extends require('./Controller') {
         this.res.writeHead(200, {'content-type':'text/html'});
         this.res.end(this.queryStringParamsList());
     }
-  
     bindUsernameAndImageURL(image){
         if (image) {
             let user = this.users.get(image.UserId);
@@ -54,7 +53,6 @@ class ImagesController extends require('./Controller') {
         }
         return null;
     }
-
     bindUseramesAndURLS(images){
         let bindedImages = [];
         for(let image of images) {
@@ -62,14 +60,10 @@ class ImagesController extends require('./Controller') {
         };
         return bindedImages;
     }
-
     head() {
         console.log("ETag: " + this.imagesRepository.ETag);
         this.response.JSON(null, this.imagesRepository.ETag);
     }
-    // GET: api/images
-    // GET: api/images?sort=key&key=value....
-    // GET: api/images/{id}
     get(id){
         let params = this.getQueryStringParams(); 
         // if we have no parameter, expose the list of possible query strings
@@ -92,7 +86,6 @@ class ImagesController extends require('./Controller') {
             }
         }
     }
-    // POST: api/images
     post(image){  
         if (this.requestActionAuthorized()) {
             // validate image before insertion
@@ -110,7 +103,6 @@ class ImagesController extends require('./Controller') {
         } else 
             this.response.unAuthorized();
     }
-    // PUT: api/bookmarks
     put(image){
         if (this.requestActionAuthorized()) {
             // validate image before updating
@@ -130,7 +122,6 @@ class ImagesController extends require('./Controller') {
         } else
             this.response.unAuthorized();
     }
-    // DELETE: api/bookmarks/{id}
     remove(id){
         if (this.requestActionAuthorized()) {
             let foundImage = this.imagesRepository.get(id);

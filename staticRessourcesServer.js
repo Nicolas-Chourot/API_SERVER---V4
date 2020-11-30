@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-let wwwroot = 'public';
+let wwwroot = 'wwwroot';
 let defaultRessource = 'index.html';
 
 function requestedStaticRessource(url) {
@@ -14,7 +14,6 @@ exports.sendRequestedFile = (req, res) => {
 
     try {
         let content = fs.readFileSync(filePath);
-         // Success
          res.writeHead(200, {'Content-Type': contentType});
          res.end(content);
          return true;
@@ -22,7 +21,6 @@ exports.sendRequestedFile = (req, res) => {
         if (error.code === 'ENOENT') {
             return false;
         } else {
-            // Some server error
             res.writeHead(500);
             res.end(`Server error: ${err.code}`);
             return true;
@@ -32,7 +30,7 @@ exports.sendRequestedFile = (req, res) => {
 function extToContentType(filePath){
     let contentType = 'text/html';
     switch (path.extname(filePath)){
-        // complete MIME list define @ https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+        // complete MIME list defined @ https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
         case '.js': 
             contentType = 'text/javascript';
             break;
