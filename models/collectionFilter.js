@@ -14,11 +14,15 @@ class collectionFilter{
             let paramValue = filterParams[paramName];
             switch (paramName) {
                 case "sort": instance.setSortFields(paramValue); break;
-                case "limit": instance.limit = paramValue;  break;
-                case "offset": instance.offset = paramValue; break;
+                case "limit": instance.limit = parseInt(paramValue);  break;
+                case "offset": instance.offset = parseInt(paramValue); break;
                 default: instance.addSearchKey(paramName, paramValue);
             }
         });
+        if (isNaN(this.limit)) {
+            this.limit = 0;
+            this.offset = 0; 
+        }
     }
 
     makeSortField(fieldName) {
