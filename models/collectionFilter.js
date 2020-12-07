@@ -24,7 +24,6 @@ class collectionFilter{
             this.offset = 0; 
         }
     }
-
     makeSortField(fieldName) {
         let parts = fieldName.split(',');
         let sortField = "";
@@ -40,7 +39,6 @@ class collectionFilter{
                     ascending: ascending
                 };
     }
-
     setSortFields(fieldNames){
         if (Array.isArray(fieldNames)) {
             for(let fieldName of fieldNames) {
@@ -49,7 +47,6 @@ class collectionFilter{
         } else 
             this.sortFields.push(this.makeSortField(fieldNames));
     }
-   
     addSearchKey(keyName, value){
         let name = utilities.capitalizeFirstLetter(keyName.toLowerCase());
         this.searchKeys.push({name: name, value: value});

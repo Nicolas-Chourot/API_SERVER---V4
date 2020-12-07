@@ -6,10 +6,12 @@ let repositoryCaches = [];
 class RepositoryCachesManager {
     static add(model, data){
         RepositoryCachesManager.clear(model);
-        repositoryCaches.push({model, data, expireIn:utilities.nowInSeconds() + repositoryCachesExpirationTime});
+        repositoryCaches.push(  {   model, 
+                                    data, 
+                                    expireIn:utilities.nowInSeconds() + repositoryCachesExpirationTime
+                                });
         console.log("DATA of " + model +".json ADDED IN REPOSITORY CACHE");
     }
-
     static clear(model) {
         if (model != "") {
             let indexToDelete = [];
@@ -21,7 +23,6 @@ class RepositoryCachesManager {
             utilities.deleteByIndex(repositoryCaches, indexToDelete);
         }
     }
-
     static find(model) {
         try {
             if (model != "") {
@@ -39,7 +40,6 @@ class RepositoryCachesManager {
         }
         return null;
     }
-
     static flushExpired() {
         let indexToDelete = [];
         let index = 0;

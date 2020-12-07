@@ -12,7 +12,7 @@ class Word{
         let validator = new Validator();
         validator.addField('Id','integer');
         validator.addField('Word','string');
-        validator.addField('Definition','url');
+        validator.addField('Definition','string');
         return validator.test(instance);
     }
 }

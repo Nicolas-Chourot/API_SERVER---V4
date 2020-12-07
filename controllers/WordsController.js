@@ -32,7 +32,6 @@ class WordsController extends require('./Controller') {
         this.res.writeHead(200, {'content-type':'text/html'});
         this.res.end(this.queryStringParamsList());
     }
-  
     head() {
         this.response.JSON(null, this.wordsRepository.ETag);
     }
