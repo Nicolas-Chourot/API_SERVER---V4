@@ -19,7 +19,7 @@ class collectionFilter{
                 default: instance.addSearchKey(paramName, paramValue);
             }
         });
-        if (isNaN(this.limit)) {
+        if (isNaN(this.limit) || isNaN(this.offset)) {
             this.limit = 0;
             this.offset = 0; 
         }
@@ -105,23 +105,13 @@ class collectionFilter{
     sort() {
         this.filteredCollection.sort((a, b) => this.compare(a, b));
     }
-    getPage(collection){
-        if (this.limit != 0){
-            let page = [];
-            let objectsListLength = collection.length;
-            for(let i = this.offset * this.limit; i < (this.offset + 1) * this.limit; i++) {
-                if (i < objectsListLength) {
-                    page.push(collection[i]);
-                }
-            }
-            return page;
-        }
-        return collection;
-    }
     get() {
         this.findByKeys();
         if (this.sortFields.length > 0)
             this.sort();
-        return this.getPage(this.filteredCollection);
+        if (this.limit != 0){
+            return this.filteredCollection.slice(this.offset * this.limit, (this.offset + 1) * this.limit);
+        }
+        return this.filteredCollection;
     }
 }
