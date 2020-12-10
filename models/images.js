@@ -17,11 +17,8 @@ class Image{
         validator.addField('Id','integer');
         validator.addField('Title','string');
         validator.addField('Description','string');
-        validator.addField('UserId', 0);
+        validator.addField('UserId', 'integer');
         validator.addField('Shared','boolean');
-        validator.addField('Created','integer');
         return validator.test(instance);
     }
-
-    
 }

@@ -15,7 +15,7 @@ class Validator{
             case "string": return value != "";
             case "integer": return parseInt(value) != NaN;
             case "float": return parseFloat(value) != NaN;
-            case "boolean" : return value === "false" || value === "true"; 
+            case "boolean" : return value === false || value === true; 
             case "email": return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
             case "url": return /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/.test(value);
             default:
