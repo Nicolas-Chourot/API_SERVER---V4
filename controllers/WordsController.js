@@ -7,12 +7,7 @@ module.exports =
 class WordsController extends require('./Controller') {
     constructor(req, res){
         super(req, res, false /* needAuthorization */);
-        this.wordsRepository = new Repository('Words', true /* cached */);
-    }
-    error(params, message){
-        params["error"] = message;
-        this.response.JSON(params);
-        return false;
+       this.wordsRepository = new Repository('Words', true /* cached */, this.params);
     }
     queryStringParamsList(){
         let content = "<div style=font-family:arial>";
@@ -39,9 +34,8 @@ class WordsController extends require('./Controller') {
     // GET: api/words?sort=key&key=value....
     // GET: api/words/{id}
     get(id){
-        let params = this.getQueryStringParams(); 
         // if we have no parameter, expose the list of possible query strings
-        if (params === null) {
+        if (this.params === null) {
             if(!isNaN(id)) {
                 this.response.JSON(this.wordsRepository.get(id));
             }
@@ -49,12 +43,10 @@ class WordsController extends require('./Controller') {
                 this.response.JSON(this.wordsRepository.getAll(), this.wordsRepository.ETag);
         }
         else {       
-            
-            if (Object.keys(params).length === 0) {
+            if (Object.keys(this.params).length === 0) {
                 this.queryStringHelp();
             } else {
-                let collectionFilter = new CollectionFilter(this.wordsRepository.getAll(), params);
-                this.response.JSON(collectionFilter.get(), this.wordsRepository.ETag);
+                this.response.JSON(this.wordsRepository.getAll(), this.wordsRepository.ETag);
             }
         }
     }

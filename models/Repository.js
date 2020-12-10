@@ -1,6 +1,6 @@
 const utilities = require("../utilities");
 const RepositoryCachesManager = require("./repositoryCachesManager.js");
-
+const CollectionFilter = require('./collectionFilter');
 const { v1: uuidv1 } = require('uuid');
 const fs = require('fs');
 ///////////////////////////////////////////////////////////////////////////
@@ -13,12 +13,13 @@ const fs = require('fs');
 let repositoryEtags = {};
 
 class Repository {
-    constructor(objectsName, cached = true) {
+    constructor(objectsName, cached = true, params = null) {
         this.objectsName = objectsName.toLowerCase();
         this.objectsList = null;
         this.objectsFile = `./data/${objectsName}.json`;
         this.initEtag();
         this.cached = cached;
+        this.params = params;
     }
     initEtag() {
         this.ETag = "";
@@ -87,6 +88,11 @@ class Repository {
         }
     }
     getAll() {
+        if (this.params) {
+            let collectionFilter = 
+            new CollectionFilter(this.objects(), this.params);
+            return collectionFilter.get();
+        }
         return this.objects();
     }
     get(id){

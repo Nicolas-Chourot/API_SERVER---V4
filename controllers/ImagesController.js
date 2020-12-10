@@ -1,19 +1,9 @@
 const ImagesRepository = require('../models/ImagesRepository');
-const utilities = require("../utilities");
-const CollectionFilter = require('../models/collectionFilter');
-const Image = require('../models/images.js');
-const ImageFilesRepository = require('../models/imageFilesRepository.js');
-
 module.exports = 
 class ImagesController extends require('./Controller') {
     constructor(req, res){
         super(req, res, false /* needAuthorization */);
-        this.imagesRepository = new ImagesRepository(req);
-    }
-    error(params, message){
-        params["error"] = message;
-        this.response.JSON(params);
-        return false;
+        this.imagesRepository = new ImagesRepository(req, this.getQueryStringParams());
     }
     queryStringParamsList(){
         let content = "<div style=font-family:arial>";
@@ -38,9 +28,8 @@ class ImagesController extends require('./Controller') {
         this.response.JSON(null, this.imagesRepository.ETag);
     }
     get(id){
-        let params = this.getQueryStringParams(); 
         // if we have no parameter, expose the list of possible query strings
-        if (params === null) {
+        if (this.params === null) { 
             if(!isNaN(id)) {
                 this.response.JSON(this.imagesRepository.get(id));
             }
@@ -49,12 +38,10 @@ class ImagesController extends require('./Controller') {
                                     this.imagesRepository.ETag);
         }
         else {
-            if (Object.keys(params).length === 0) {
+            if (Object.keys(this.params).length === 0) /* ? only */{
                 this.queryStringHelp();
             } else {
-                let collectionFilter = 
-                new CollectionFilter(this.imagesRepository.getAll(), params);
-                this.response.JSON(collectionFilter.get(), this.imagesRepository.ETag);
+                this.response.JSON(this.imagesRepository.getAll(), this.imagesRepository.ETag);
             }
         }
     }

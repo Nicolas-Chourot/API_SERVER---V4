@@ -4,10 +4,11 @@ const Image = require('./images.js');
 const utilities = require("../utilities");
 module.exports = 
 class ImagesRepository extends Repository {
-    constructor(req){
+    constructor(req, params){
         super('Images', true);
         this.users = new Repository('Users');
         this.req = req;
+        this.params = params;
     }
     bindUsernameAndImageURL(image){
         if (image) {

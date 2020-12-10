@@ -18,6 +18,7 @@ class Controller {
             // if true, will require a valid bearer token from request header
             this.needAuthorization = needAuthorization;
             this.response = new Response(res, this.req.url);
+            this.params = this.getQueryStringParams();
         }
     }
     requestAuthorized() {
