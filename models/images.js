@@ -1,6 +1,6 @@
 module.exports = 
 class Image{
-    constructor(id, title, description, created, userId, shared, GUID, imageData)
+    constructor(title, description, created, userId, shared, GUID)
     {
         this.Id = 0;
         this.Title = title !== undefined ? title : "";
