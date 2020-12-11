@@ -1,8 +1,4 @@
 const Repository = require('../models/Repository');
-const Bookmark = require('../models/bookmark');
-const CollectionFilter = require('../models/collectionFilter');
-const { decomposePath } = require('../utilities');
-
 module.exports = 
 class WordsController extends require('./Controller') {
     constructor(req, res){

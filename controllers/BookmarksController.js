@@ -1,18 +1,11 @@
 const Repository = require('../models/Repository');
 const Bookmark = require('../models/bookmark');
-const CollectionFilter = require('../models/collectionFilter');
-const { decomposePath } = require('../utilities');
 
 module.exports = 
 class BookmarksController extends require('./Controller') {
     constructor(req, res){
         super(req, res, false /* needAuthorization */);
         this.bookmarksRepository = new Repository('Bookmarks', true /* cached */, this.params);
-    }
-    error(params, message){
-        params["error"] = message;
-        this.response.JSON(params);
-        return false;
     }
     queryStringParamsList(){
         let content = "<div style=font-family:arial>";
