@@ -8,7 +8,7 @@ class ImagesController extends require('./Controller') {
     queryStringParamsList(){
         let content = "<div style=font-family:arial>";
         content += "<h4>List of parameters in query strings:</h4>";
-        content += "<h4>? sort=key <br> return all images sorted by key values (Id, Name, Category, Url)";
+        content += "<h4>? sort=key <br> return all images sorted by key values";
         content += "<h4>? sort=key,desc <br> return all images sorted by descending key values";        
         content += "<h4>? key=value <br> return the image with key value = value";
         content += "<h4>? key=value* <br> return the image with key value that start with value";
