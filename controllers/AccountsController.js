@@ -1,4 +1,5 @@
 const usersRepository = require('../models/usersRepository');
+const ImagesRepository = require('../models/imagesRepository');
 const TokenManager = require('../tokenManager');
 const utilities = require("../utilities");
 const User = require('../models/user');
@@ -112,7 +113,7 @@ class AccountsController extends require('./Controller') {
         Cache.clear('bookmarks');
     }
     deleteAllUsersImages(userId){
-        let imagesRepository = new Repository('Images', true);
+        let imagesRepository = new ImagesRepository('imagesRepository', true);
         let images = imagesRepository.getAll();
         let indexToDelete = [];
         let index = 0;
