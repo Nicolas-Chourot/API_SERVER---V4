@@ -14,10 +14,16 @@ class ImagesRepository extends Repository {
         if (image) {
             let user = this.users.get(image.UserId);
             let username = "unknown";
-            if (user !== null)
+            let userAvatarURL = "";
+            if (user !== null) {
                 username = user.Name;
+                if (user.AvatarGUID != "")
+                    userAvatarURL = "http://" + this.req.headers["host"] + ImageFilesRepository.getImageFileURL(user["AvatarGUID"]);
+            } 
             let bindedImage = {...image};
             bindedImage["Username"] = username;
+            bindedImage["UserAvatarURL"] = userAvatarURL;
+
             if (image["GUID"] != ""){
                 bindedImage["OriginalURL"] = "http://" + this.req.headers["host"] + ImageFilesRepository.getImageFileURL(image["GUID"]);
                 bindedImage["ThumbnailURL"] = "http://" + this.req.headers["host"] + ImageFilesRepository.getThumbnailFileURL(image["GUID"]);
