@@ -16,7 +16,6 @@ class User{
         validator.addField('Id','integer');
         validator.addField('Name','string');
         validator.addField('Email','email');
-        validator.addField('Created','integer');
         return validator.test(instance);
     }
 }
