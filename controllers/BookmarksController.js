@@ -7,7 +7,7 @@ module.exports =
 class BookmarksController extends require('./Controller') {
     constructor(req, res){
         super(req, res, false /* needAuthorization */);
-        this.bookmarksRepository = new Repository('Bookmarks', true /* cached */);
+        this.bookmarksRepository = new Repository('Bookmarks', true /* cached */, this.params);
     }
     error(params, message){
         params["error"] = message;
@@ -65,9 +65,8 @@ class BookmarksController extends require('./Controller') {
     // GET: api/bookmarks?sort=key&key=value....
     // GET: api/bookmarks/{id}
     get(id){
-        let params = this.getQueryStringParams(); 
         // if we have no parameter, expose the list of possible query strings
-        if (params === null) {
+        if (this.params === null) {
             if(!isNaN(id)) {
                 this.response.JSON(this.resolveUserName(this.bookmarksRepository.get(id)));
             }
@@ -76,13 +75,11 @@ class BookmarksController extends require('./Controller') {
                                     this.bookmarksRepository.ETag);
         }
         else {
-            if (Object.keys(params).length === 0) {
+            if (Object.keys(this.params).length === 0) {
                 this.queryStringHelp();
             } else {
-                let collectionFilter= new CollectionFilter( 
-                    this.resolveUserNames(this.bookmarksRepository.getAll()), 
-                    params);
-                this.response.JSON(collectionFilter.get(), this.bookmarksRepository.ETag);
+                this.response.JSON( this.resolveUserNames(this.bookmarksRepository.getAll()), 
+                                    this.bookmarksRepository.ETag);
             }
         }
     }

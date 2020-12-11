@@ -1,4 +1,4 @@
-const Repository = require('../models/Repository');
+const usersRepository = require('../models/usersRepository');
 const TokenManager = require('../tokenManager');
 const utilities = require("../utilities");
 const User = require('../models/user');
@@ -8,7 +8,7 @@ module.exports =
 class AccountsController extends require('./Controller') {
     constructor(req, res){
         super(req, res);
-        this.usersRepository = new Repository('Users');
+        this.usersRepository = new usersRepository(this.req, this.params);
     }
 
     // list of users with masked password
@@ -38,7 +38,6 @@ class AccountsController extends require('./Controller') {
         if (user != null){
             if (user.Password == loginInfo.Password) {
                 let newToken = TokenManager.create(user);
-                console.log(newToken);
                 this.response.JSON(newToken);
             } else 
                 this.response.badRequest();

@@ -43,20 +43,20 @@ class ImagesRepository extends Repository {
         return this.bindUseramesAndImageURLS(super.getAll());
     }
     add(image) {
+        image["Created"] = utilities.nowInSeconds();
         if (Image.valid(image)) {
             image["GUID"] = ImageFilesRepository.storeImageData("", image["ImageData"]);
             delete image["ImageData"];
-            image["Created"] = utilities.nowInSeconds();
             return super.add(image);
         }
         return null;
     }
     update(image) {
+        image["Created"] = utilities.nowInSeconds();
         if (Image.valid(image)) {
             let foundImage = super.get(image.Id);
             if (foundImage != null) {
                 image["GUID"] = ImageFilesRepository.storeImageData(image["GUID"], image["ImageData"]);
-                image["Created"] = utilities.nowInSeconds();
                 delete image["ImageData"];
                 return super.update(image);
             }
