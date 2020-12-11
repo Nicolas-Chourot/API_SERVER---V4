@@ -1,4 +1,4 @@
-const ImagesRepository = require('../models/ImagesRepository');
+const ImagesRepository = require('../models/imagesRepository');
 module.exports = 
 class ImagesController extends require('./Controller') {
     constructor(req, res){
