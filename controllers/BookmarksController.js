@@ -26,7 +26,7 @@ class BookmarksController extends require('./Controller') {
         this.res.end(this.queryStringParamsList());
     }
   
-    resolveUserName(bookmark){
+    bindUserName(bookmark){
         let users = new Repository('Users');
         let user = users.get(bookmark.UserId);
         let username = "unknown";
@@ -61,7 +61,7 @@ class BookmarksController extends require('./Controller') {
         // if we have no parameter, expose the list of possible query strings
         if (this.params === null) {
             if(!isNaN(id)) {
-                this.response.JSON(this.resolveUserName(this.bookmarksRepository.get(id)));
+                this.response.JSON(this.bindUserName(this.bookmarksRepository.get(id)));
             }
             else  
                 this.response.JSON( this.resolveUserNames(this.bookmarksRepository.getAll()), 

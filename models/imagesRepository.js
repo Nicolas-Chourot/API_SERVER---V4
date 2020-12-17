@@ -9,6 +9,7 @@ class ImagesRepository extends Repository {
         this.users = new Repository('Users');
         this.req = req;
         this.params = params;
+        this.setBindExtraDataMethod(this.bindUsernameAndImageURL);
     }
     bindUsernameAndImageURL(image){
         if (image) {
@@ -35,19 +36,7 @@ class ImagesRepository extends Repository {
         }
         return null;
     }
-    bindUseramesAndImageURLS(images){
-        let bindedImages = [];
-        for(let image of images) {
-            bindedImages.push(this.bindUsernameAndImageURL(image));
-        };
-        return bindedImages;
-    }
-    get(id) {
-        return this.bindUsernameAndImageURL(super.get(id));
-    }
-    getAll() {
-        return this.bindUseramesAndImageURLS(super.getAll());
-    }
+    
     add(image) {
         image["Created"] = utilities.nowInSeconds();
         if (Image.valid(image)) {

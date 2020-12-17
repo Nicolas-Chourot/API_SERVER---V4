@@ -20,7 +20,12 @@ class Repository {
         this.initEtag();
         this.cached = cached;
         this.params = params;
+        this.bindExtraDataMethod = null;
     }
+    setBindExtraDataMethod(bindExtraDataMethod){
+        this.bindExtraDataMethod = bindExtraDataMethod;
+    }
+
     initEtag() {
         this.ETag = "";
         if (this.objectsName in repositoryEtags)
@@ -87,18 +92,32 @@ class Repository {
             return null;
         }
     }
+    bindExtraData(datas){
+        let bindedDatas = [];
+        for(let data of datas) {
+            bindedDatas.push(this.bindExtraDataMethod(data));
+        };
+        return bindedDatas;
+    }
     getAll() {
+        let objects = this.objects();
+        if (this.bindExtraDataMethod != null){
+            objects = this.bindExtraData(objects);
+        }
         if (this.params) {
             let collectionFilter = 
-            new CollectionFilter(this.objects(), this.params);
+            new CollectionFilter(objects, this.params);
             return collectionFilter.get();
         }
-        return this.objects();
+        return objects;
     }
     get(id){
         for(let object of this.objects()){
             if (object.Id === id) {
-               return object;
+                if (this.bindExtraDataMethod != null)
+                    return this.bindExtraDataMethod(object);
+                else
+                    return object;
             }
         }
         return null;
