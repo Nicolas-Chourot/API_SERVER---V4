@@ -24,6 +24,8 @@ class ImagesRepository extends Repository {
             let bindedImage = {...image};
             bindedImage["Username"] = username;
             bindedImage["UserAvatarURL"] = userAvatarURL;
+            const datesOptions = { hour:'numeric', minute:'numeric', second:'numeric'};
+            bindedImage["Date"] = new Date(image["Created"] * 1000).toLocaleDateString('fr-FR', datesOptions);
 
             if (image["GUID"] != ""){
                 bindedImage["OriginalURL"] = "http://" + this.req.headers["host"] + ImageFilesRepository.getImageFileURL(image["GUID"]);
